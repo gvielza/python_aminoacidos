@@ -1,0 +1,24 @@
+Nombre,Abr,Simbolo,Cod.Genetico,Masa Molar,Van Walls,Polaridad,Hidrofobica
+Alanina,Ala,A,GCN,89.094,67,apolares,1.8
+Arginina,Arg,R,MGN,174.203,148,polares,-4.5
+Arginina,Arg,R,CGY,174.203,148,polares,-4.5
+Asparagina,Asn,N,AAY,132.119,96,polares,-3.5
+Ácido aspártico,Asp,D,133.104,91,polares,-3.5
+Ácido aspártico,GAY,D,133.104,91,polares,-3.5
+Cisteína,Cys,C,UGY,121.154,86,polares,2.5
+Glutamina,Gln,Q,CAR,146.146,114,polares,-3.5
+Ácido glutámico,Glu,E,147.131,109,polares,-3.5
+Ácido glutámico,Gar,E,147.131,109,polares,-3.5
+Glicina,Gly,G,GGN,75.067,48,apolares,-0.4
+Histidina,His,H,CAY,155.156,118,polares,-3.2
+Isoleucina,Ile,I,AUH,131.175,124,apolares,4.5
+Leucina,Leu,L,YUR, CUY,131.175,124,apolares,3.8
+Lisina,Lys,K,AAR,146.189,135,polares,-3.9
+Metionina,Met,M,AUG,149.208,124,apolares,1.9
+Fenilalanina,Phe,F,UUY,165.192,135,apolares,2.8
+Prolina,Pro,P,CCN,115.132,90,apolares,-1.6
+Serina,Ser,S,UCN, AGY,105.093,73,polares,-0.8
+Treonina,Thr,T,ACN,119.119,93,polares,-0.7
+Triptófano,Trp,W,UGG,204.228,163,apolares,-0.9
+Tirosina,Tyr,Y,UAY,181.191,141,polares,-1.3
+Valina,Val,V,GUN,117.148,105,apolares,4.2

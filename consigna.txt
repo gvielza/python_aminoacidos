@@ -1,0 +1,10 @@
+TRABAJO PRACTICO. PROGRAMACION.
+1 	Estructura de datos donde se muestra la información contenida en el archivo aminoacidos1.csv.
+2a 	El nombre del aminoácido dada su abreviatura y viceversa.
+2b 	El símbolo del aminoácido dada su abreviatura y viceversa.
+2c 	Su símbolo dado un codón (U o T) y viceversa.
+2d 	La información completa de un aminoácido dado su abreviatura o símbolo.
+2e 	Un arreglo de aminoácido dado un rango de interacción hidrofóbica.
+2f	La secuencia de aminoácidos dada una secuencia fasta de nucleótidos.
+2g	La misma secuencia con los caracteres en mayúsculas o minúsculas.
+2h	Una verificación que todos los símbolos de una secuencia son válidos.
