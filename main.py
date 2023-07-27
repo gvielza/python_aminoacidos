@@ -45,10 +45,71 @@ def aminoacidos_por_hidrofobicidad(rango_inicio, rango_fin, datos):
         if rango_inicio <= hidrofobicidad <= rango_fin:
             aminoacidos_en_rango.append(fila['Nombre'])
     return aminoacidos_en_rango
+
+def leer_secuencia_fasta(archivo_fasta):
+    with open(archivo_fasta, 'r') as archivo:
+        lineas = archivo.readlines()
+
+    secuencia = ''
+    for linea in lineas[1:]:
+        secuencia += linea.strip()
+
+    return secuencia
+def traducir_secuencia(secuencia_nucleotidos, mayusculas=True):
+    codigo_genetico = {
+        'ATA': 'I', 'ATC': 'I', 'ATT': 'I', 'ATG': 'M',
+        'ACA': 'T', 'ACC': 'T', 'ACG': 'T', 'ACT': 'T',
+        'AAC': 'N', 'AAT': 'N', 'AAA': 'K', 'AAG': 'K',
+        'AGC': 'S', 'AGT': 'S', 'AGA': 'R', 'AGG': 'R',
+        'CTA': 'L', 'CTC': 'L', 'CTG': 'L', 'CTT': 'L',
+        'CCA': 'P', 'CCC': 'P', 'CCG': 'P', 'CCT': 'P',
+        'CAC': 'H', 'CAT': 'H', 'CAA': 'Q', 'CAG': 'Q',
+        'CGA': 'R', 'CGC': 'R', 'CGG': 'R', 'CGT': 'R',
+        'GTA': 'V', 'GTC': 'V', 'GTG': 'V', 'GTT': 'V',
+        'GCA': 'A', 'GCC': 'A', 'GCG': 'A', 'GCT': 'A',
+        'GAC': 'D', 'GAT': 'D', 'GAA': 'E', 'GAG': 'E',
+        'GGA': 'G', 'GGC': 'G', 'GGG': 'G', 'GGT': 'G',
+        'TCA': 'S', 'TCC': 'S', 'TCG': 'S', 'TCT': 'S',
+        'TTC': 'F', 'TTT': 'F', 'TTA': 'L', 'TTG': 'L',
+        'TAC': 'Y', 'TAT': 'Y', 'TAA': '*', 'TAG': '*',
+        'TGC': 'C', 'TGT': 'C', 'TGA': '*', 'TGG': 'W',
+        'ATA': 'I', 'ATC': 'I', 'ATT': 'I', 'ATG': 'M',
+        'ACA': 'T', 'ACC': 'T', 'ACG': 'T', 'ACT': 'T',
+        'AAC': 'N', 'AAT': 'N', 'AAA': 'K', 'AAG': 'K',
+        'AGC': 'S', 'AGT': 'S', 'AGA': 'R', 'AGG': 'R',
+        'CTA': 'L', 'CTC': 'L', 'CTG': 'L', 'CTT': 'L',
+        'CCA': 'P', 'CCC': 'P', 'CCG': 'P', 'CCT': 'P',
+        'CAC': 'H', 'CAT': 'H', 'CAA': 'Q', 'CAG': 'Q',
+        'CGA': 'R', 'CGC': 'R', 'CGG': 'R', 'CGT': 'R',
+        'GTA': 'V', 'GTC': 'V', 'GTG': 'V', 'GTT': 'V',
+        'GCA': 'A', 'GCC': 'A', 'GCG': 'A', 'GCT': 'A',
+        'GAC': 'D', 'GAT': 'D', 'GAA': 'E', 'GAG': 'E',
+        'GGA': 'G', 'GGC': 'G', 'GGG': 'G', 'GGT': 'G',
+        'TCA': 'S', 'TCC': 'S', 'TCG': 'S', 'TCT': 'S',
+        'TTC': 'F', 'TTT': 'F', 'TTA': 'L', 'TTG': 'L',
+        'TAC': 'Y', 'TAT': 'Y', 'TAA': '*', 'TAG': '*',
+        'TGC': 'C', 'TGT': 'C', 'TGA': '*', 'TGG': 'W',
+    }
+
+    secuencia_aminoacidos = ''
+    for i in range(0, len(secuencia_nucleotidos), 3):
+        codon = secuencia_nucleotidos[i:i + 3]
+        aminoacido = codigo_genetico.get(codon.upper(), 'X')
+        secuencia_aminoacidos += aminoacido
+
+    return secuencia_aminoacidos.upper() if mayusculas else secuencia_aminoacidos.lower()
+
+def es_secuencia_valida(secuencia, conjunto_valido):
+    for simbolo in secuencia:
+        if simbolo not in conjunto_valido:
+            return False
+    return True
+
 if __name__== "__main__":
     archivo_csv="amino.csv"
     datos=leer_datos_desde_csv(archivo_csv)
     while True:
+        print("")
         print("Escoja una de las siguientes opciones para operar con el csv:")
         print("1- Mostrar todos los aminoácidos del CSV")
         print("2-Buscar por abreviatura")
@@ -56,6 +117,9 @@ if __name__== "__main__":
         print("4-Buscar símbolo dado un codón (U o T) o viceversa.")
         print("5- Información completa de un aminoácido por abreviatura o símbolo")
         print("6- Buscar aminoácidos por rango de interacción hidrofóbica")
+        print("7- Mostrar la secuencia de aminoácidos dada una secuencia fasta en minúscula")
+        print("8- Mostrar la secuencia de aminoácidos dada una secuencia fasta en mayúscula")
+        print("9- Verificar que los símbolos de la secuencia fasta son correctos")
 
         opcion=input("Seleciona una opción del 1 al 10: ")
 
@@ -92,6 +156,25 @@ if __name__== "__main__":
                 print(", ".join(aminoacidos_en_rango))
             else:
                 print(f"No se encontraron aminoácidos con interacción hidrofóbica en el rango especificado.")
+        elif opcion=="7":
+            archivo_fasta = "ACC93539.1.fasta"
+            secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
+            secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=False)
+            print(f"\nSecuencia de aminoácidos en minúsculas:\n{secuencia_aminoacidos_minusculas}")
+        elif opcion=="8":
+            archivo_fasta = "ACC93539.1.fasta"
+            secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
+            secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=True)
+            print(f"\nSecuencia de aminoácidos en MAYUSCULA:\n{secuencia_aminoacidos_minusculas}")
+        elif opcion=="9":
+            archivo_fasta = "secuencia.fasta"
+            conjunto_aminoacidos_validos = set("ACDEFGHIKLMNPQRSTVWY")
+            secuencia = leer_secuencia_fasta(archivo_fasta)
+            resultado = es_secuencia_valida(secuencia, conjunto_aminoacidos_validos)
+            if resultado:
+                print("La secuencia del archivo fasta es válida.")
+            else:
+                print("La secuencia del archivo fasta contiene símbolos inválidos.")
         else:
             print("Opción inválida. Por favor, elige una opción del 1 al 4.")
 
