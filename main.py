@@ -47,14 +47,20 @@ def aminoacidos_por_hidrofobicidad(rango_inicio, rango_fin, datos):
     return aminoacidos_en_rango
 
 def leer_secuencia_fasta(archivo_fasta):
-    with open(archivo_fasta, 'r') as archivo:
-        lineas = archivo.readlines()
+    try:
+        with open(archivo_fasta, 'r') as archivo:
+            lineas = archivo.readlines()
 
-    secuencia = ''
-    for linea in lineas[1:]:
-        secuencia += linea.strip()
+        secuencia = ''
+        for linea in lineas[1:]:
+            secuencia += linea.strip()
 
-    return secuencia
+        return secuencia
+    except FileNotFoundError:
+        print(f"Error: El archivo '{archivo_fasta} no se encontró")
+        return None
+
+
 def traducir_secuencia(secuencia_nucleotidos, mayusculas=True):
     codigo_genetico = {
         'ATA': 'I', 'ATC': 'I', 'ATT': 'I', 'ATG': 'M',
@@ -109,74 +115,86 @@ if __name__== "__main__":
     archivo_csv="amino.csv"
     datos=leer_datos_desde_csv(archivo_csv)
     while True:
-        print("")
-        print("Escoja una de las siguientes opciones para operar con el csv:")
-        print("1- Mostrar todos los aminoácidos del CSV")
-        print("2-Buscar por abreviatura")
-        print("3-Buscar por nombre")
-        print("4-Buscar símbolo dado un codón (U o T) o viceversa.")
-        print("5- Información completa de un aminoácido por abreviatura o símbolo")
-        print("6- Buscar aminoácidos por rango de interacción hidrofóbica")
-        print("7- Mostrar la secuencia de aminoácidos dada una secuencia fasta en minúscula")
-        print("8- Mostrar la secuencia de aminoácidos dada una secuencia fasta en mayúscula")
-        print("9- Verificar que los símbolos de la secuencia fasta son correctos")
+        entrada=input("Presione Enter si quiere ver las opciones existentes de lo contrario presione una letra para salir del programa: ")
+        if entrada=='':
+            print("")
+            print("Escoja una de las siguientes opciones para operar con el csv:")
+            print("1- Mostrar todos los aminoácidos del CSV")
+            print("2- Buscar por abreviatura")
+            print("3- Buscar por nombre")
+            print("4- Buscar símbolo dado un codón (U o T) o viceversa.")
+            print("5- Información completa de un aminoácido por abreviatura o símbolo")
+            print("6- Buscar aminoácidos por rango de interacción hidrofóbica")
+            print("7- Mostrar la secuencia de aminoácidos dada una secuencia fasta en minúscula")
+            print("8- Mostrar la secuencia de aminoácidos dada una secuencia fasta en mayúscula")
+            print("9- Verificar que los símbolos de la secuencia fasta son correctos")
 
-        opcion=input("Seleciona una opción del 1 al 10: ")
+            opcion = input("Seleciona una opción del 1 al 10: ")
+            if opcion == "1":
+                mostrar_datos(datos)
+            if opcion == "2":
+                abreviatura = input("Ingresa la abreviatura del aminoácido: ")
+                nombre_encontrado = buscar_por_abreviatura(abreviatura, datos)
+                if nombre_encontrado:
+                    print(f"Nombre del aminoácido con abreviatura '{abreviatura}': {nombre_encontrado}")
+                else:
+                    print(f"No se encontró ningún aminoácido con la abreviatura '{abreviatura}'.")
+            elif opcion == "3":
+                nombre = input("Ingresa el nombre del aminoácido: ")
+                abreviatura_encontrada = buscar_por_nombre(nombre, datos)
+                if abreviatura_encontrada:
+                    print(f"Abreviatura del aminoácido '{nombre}': {abreviatura_encontrada}")
+                else:
+                    print(f"No se encontró ningún aminoácido con el nombre '{nombre}'.")
+            elif opcion == "4":
+                valor = input("Ingresa un símbolo o un código genético: ")
+                resultado = buscar_simbolo_o_codigo_genetico(valor, datos)
+                print(resultado)
+            elif opcion == "5":
+                valor = input("Ingresa la abreviatura o símbolo del aminoácido: ")
+                resultado = informacion_aminoacido(valor, datos)
+                print(resultado)
+            elif opcion == "6":
+                rango_inicio = float(input("Ingresa el valor de inicio del rango de interacción hidrofóbica: "))
+                rango_fin = float(input("Ingresa el valor de fin del rango de interacción hidrofóbica: "))
+                aminoacidos_en_rango = aminoacidos_por_hidrofobicidad(rango_inicio, rango_fin, datos)
+                if aminoacidos_en_rango:
+                    print(f"Aminoácidos con interacción hidrofóbica entre {rango_inicio} y {rango_fin}:")
+                    print(", ".join(aminoacidos_en_rango))
+                else:
+                    print(f"No se encontraron aminoácidos con interacción hidrofóbica en el rango especificado.")
+            elif opcion == "7":
+                secuencia_entrada=input("Introduzca el nombre del archivo (Debe estar en la raíz de su proyecto7)")
+                archivo_fasta = secuencia_entrada+".fasta"
 
-        if opcion == "1":
-            mostrar_datos(datos)
-        if opcion=="2":
-            abreviatura = input("Ingresa la abreviatura del aminoácido: ")
-            nombre_encontrado = buscar_por_abreviatura(abreviatura, datos)
-            if nombre_encontrado:
-                print(f"Nombre del aminoácido con abreviatura '{abreviatura}': {nombre_encontrado}")
+                secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
+                if secuencia_nucleotidos is not None:
+                    secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=False)
+                    print(f"\nSecuencia de aminoácidos en minúsculas:\n{secuencia_aminoacidos_minusculas}")
+
+            elif opcion == "8":
+                secuencia_entrada = input("Introduzca el nombre del archivo (Debe estar en la raíz de su proyecto7)")
+                archivo_fasta = secuencia_entrada + ".fasta"
+                secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
+                if secuencia_nucleotidos is not None:
+                    secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=True)
+                    print(f"\nSecuencia de aminoácidos en MAYUSCULA:\n{secuencia_aminoacidos_minusculas}")
+
+            elif opcion == "9":
+                archivo_fasta = "secuencia.fasta"
+                conjunto_aminoacidos_validos = set("ACDEFGHIKLMNPQRSTVWY")
+                secuencia = leer_secuencia_fasta(archivo_fasta)
+                resultado = es_secuencia_valida(secuencia, conjunto_aminoacidos_validos)
+                if resultado:
+                    print("La secuencia del archivo fasta es válida.")
+                else:
+                    print("La secuencia del archivo fasta contiene símbolos inválidos.")
             else:
-                print(f"No se encontró ningún aminoácido con la abreviatura '{abreviatura}'.")
-        elif opcion == "3":
-            nombre = input("Ingresa el nombre del aminoácido: ")
-            abreviatura_encontrada = buscar_por_nombre(nombre, datos)
-            if abreviatura_encontrada:
-                print(f"Abreviatura del aminoácido '{nombre}': {abreviatura_encontrada}")
-            else:
-                print(f"No se encontró ningún aminoácido con el nombre '{nombre}'.")
-        elif opcion == "4":
-            valor = input("Ingresa un símbolo o un código genético: ")
-            resultado = buscar_simbolo_o_codigo_genetico(valor, datos)
-            print(resultado)
-        elif opcion == "5":
-            valor = input("Ingresa la abreviatura o símbolo del aminoácido: ")
-            resultado = informacion_aminoacido(valor, datos)
-            print(resultado)
-        elif opcion == "6":
-            rango_inicio = float(input("Ingresa el valor de inicio del rango de interacción hidrofóbica: "))
-            rango_fin = float(input("Ingresa el valor de fin del rango de interacción hidrofóbica: "))
-            aminoacidos_en_rango = aminoacidos_por_hidrofobicidad(rango_inicio, rango_fin, datos)
-            if aminoacidos_en_rango:
-                print(f"Aminoácidos con interacción hidrofóbica entre {rango_inicio} y {rango_fin}:")
-                print(", ".join(aminoacidos_en_rango))
-            else:
-                print(f"No se encontraron aminoácidos con interacción hidrofóbica en el rango especificado.")
-        elif opcion=="7":
-            archivo_fasta = "ACC93539.1.fasta"
-            secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
-            secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=False)
-            print(f"\nSecuencia de aminoácidos en minúsculas:\n{secuencia_aminoacidos_minusculas}")
-        elif opcion=="8":
-            archivo_fasta = "ACC93539.1.fasta"
-            secuencia_nucleotidos = leer_secuencia_fasta(archivo_fasta)
-            secuencia_aminoacidos_minusculas = traducir_secuencia(secuencia_nucleotidos, mayusculas=True)
-            print(f"\nSecuencia de aminoácidos en MAYUSCULA:\n{secuencia_aminoacidos_minusculas}")
-        elif opcion=="9":
-            archivo_fasta = "secuencia.fasta"
-            conjunto_aminoacidos_validos = set("ACDEFGHIKLMNPQRSTVWY")
-            secuencia = leer_secuencia_fasta(archivo_fasta)
-            resultado = es_secuencia_valida(secuencia, conjunto_aminoacidos_validos)
-            if resultado:
-                print("La secuencia del archivo fasta es válida.")
-            else:
-                print("La secuencia del archivo fasta contiene símbolos inválidos.")
+                print("Opción inválida. Por favor, elige una opción del 1 al 4.")
+
+
         else:
-            print("Opción inválida. Por favor, elige una opción del 1 al 4.")
+            break
 
 
 
