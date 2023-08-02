@@ -5,11 +5,11 @@ def leer_datos_desde_csv(nombre_archivo):
     with open(nombre_archivo, 'r') as archivo_csv:
         lector_csv = csv.DictReader(archivo_csv)
         for fila in lector_csv:
-            datos.append(fila)
+            datos.append(fila) ##agrego elementos a datos para mostrar en consola con método append
     return datos
 def buscar_por_abreviatura(abreviatura, datos):
     for fila in datos:
-        if fila['Abr'].lower() == abreviatura.lower():
+        if fila['Abr'].lower() == abreviatura.lower():##convierto con lower a minuscula
             return fila['Nombre']
     return None
 
@@ -25,7 +25,7 @@ def mostrar_datos(datos):
               f"Van Walls: {fila['Van Walls']},Polaridad: {fila['Polaridad']},Hidrofobica: {fila['Hidrofobica']}")
 def buscar_simbolo_o_codigo_genetico(valor, datos):
     for fila in datos:
-        if valor.upper() == fila['Simbolo']:
+        if valor.upper() == fila['Simbolo']: ##con upper convierto a mayuscula
             return f"El código genético correspondiente al símbolo '{valor}' es: {fila['Cod.Genetico']}"
         elif valor.upper() == fila['Cod.Genetico']:
             return f"El símbolo correspondiente al código genético '{valor}' es: {fila['Simbolo']}"
@@ -41,7 +41,7 @@ def informacion_aminoacido(valor, datos):
 def aminoacidos_por_hidrofobicidad(rango_inicio, rango_fin, datos):
     aminoacidos_en_rango = []
     for fila in datos:
-        hidrofobicidad = float(fila['Hidrofobica'])
+        hidrofobicidad = float(fila['Hidrofobica'])##convierto a float para comparar que esté en el rango
         if rango_inicio <= hidrofobicidad <= rango_fin:
             aminoacidos_en_rango.append(fila['Nombre'])
     return aminoacidos_en_rango
@@ -52,8 +52,8 @@ def leer_secuencia_fasta(archivo_fasta):
             lineas = archivo.readlines()
 
         secuencia = ''
-        for linea in lineas[1:]:
-            secuencia += linea.strip()
+        for linea in lineas[1:]:##con el 1: paso a la siguiente linea, ya que la primera interesa en este caso
+            secuencia += linea.strip() ##con strip elimino los espacios en blanco
 
         return secuencia
     ##lanzo error si no se encuentra el archivo
@@ -100,7 +100,7 @@ def traducir_secuencia(secuencia_nucleotidos, mayusculas=True):
 
     secuencia_aminoacidos = ''
     for i in range(0, len(secuencia_nucleotidos), 3):
-        codon = secuencia_nucleotidos[i:i + 3]
+        codon = secuencia_nucleotidos[i:i + 3]##usando 3 en cada secuencia
         aminoacido = codigo_genetico.get(codon.upper(), 'X')
         secuencia_aminoacidos += aminoacido
 ## si viene con el parámetro mayúscula en true retorno la cadena en mayuscula, de lo contrario en minúscula
@@ -182,17 +182,17 @@ if __name__== "__main__":
                     print(f"\nSecuencia de aminoácidos en MAYUSCULA:\n{secuencia_aminoacidos_minusculas}")
 
             elif opcion == "9":
-                secuencia_entrada = input("Introduzca el nombre del archivo (Debe estar en la raíz de su proyecto7)")
+                secuencia_entrada = input("Introduzca el nombre del archivo (Debe estar en la raíz de su proyecto)")
                 archivo_fasta = secuencia_entrada + ".fasta"
-                conjunto_aminoacidos_validos = set("ACDEFGHIKLMNPQRSTVWY")
+                conjunto = set("ACTG")
                 secuencia = leer_secuencia_fasta(archivo_fasta)
-                resultado = es_secuencia_valida(secuencia, conjunto_aminoacidos_validos)
+                resultado = es_secuencia_valida(secuencia, conjunto)
                 if resultado:
                     print("La secuencia del archivo fasta es válida.")
                 else:
                     print("La secuencia del archivo fasta contiene símbolos inválidos.")
             else:
-                print("Opción inválida. Por favor, elige una opción del 1 al 4.")
+                print("Opción inválida. Por favor, elige una opción del 1 al 9.")
 
 
         else:
