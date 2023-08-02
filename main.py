@@ -56,6 +56,7 @@ def leer_secuencia_fasta(archivo_fasta):
             secuencia += linea.strip()
 
         return secuencia
+    ##lanzo error si no se encuentra el archivo
     except FileNotFoundError:
         print(f"Error: El archivo '{archivo_fasta} no se encontró")
         return None
@@ -102,7 +103,7 @@ def traducir_secuencia(secuencia_nucleotidos, mayusculas=True):
         codon = secuencia_nucleotidos[i:i + 3]
         aminoacido = codigo_genetico.get(codon.upper(), 'X')
         secuencia_aminoacidos += aminoacido
-
+## si viene con el parámetro mayúscula en true retorno la cadena en mayuscula, de lo contrario en minúscula
     return secuencia_aminoacidos.upper() if mayusculas else secuencia_aminoacidos.lower()
 
 def es_secuencia_valida(secuencia, conjunto_valido):
@@ -129,7 +130,7 @@ if __name__== "__main__":
             print("8- Mostrar la secuencia de aminoácidos dada una secuencia fasta en mayúscula")
             print("9- Verificar que los símbolos de la secuencia fasta son correctos")
 
-            opcion = input("Seleciona una opción del 1 al 10: ")
+            opcion = input("Seleciona una opción del 1 al 9: ")
             if opcion == "1":
                 mostrar_datos(datos)
             if opcion == "2":
@@ -181,7 +182,8 @@ if __name__== "__main__":
                     print(f"\nSecuencia de aminoácidos en MAYUSCULA:\n{secuencia_aminoacidos_minusculas}")
 
             elif opcion == "9":
-                archivo_fasta = "secuencia.fasta"
+                secuencia_entrada = input("Introduzca el nombre del archivo (Debe estar en la raíz de su proyecto7)")
+                archivo_fasta = secuencia_entrada + ".fasta"
                 conjunto_aminoacidos_validos = set("ACDEFGHIKLMNPQRSTVWY")
                 secuencia = leer_secuencia_fasta(archivo_fasta)
                 resultado = es_secuencia_valida(secuencia, conjunto_aminoacidos_validos)
